@@ -1,17 +1,21 @@
 from __future__ import division
 import numpy as np
 import time
+import pdb
 
-N = 50000
-dim = 770
+data = np.load('train_data_sanitized.npy')
+train_N = int(data.shape[0] * .8)
+test_N = data.shape[0] - train_N
+dim = data.shape[1] - 1
 numEpochs = 200
-learning_rate = .00005
+learning_rate = .00000000002
 
-train = np.load('train_data_sanitized.npy')
-import pdb; pdb.set_trace()
+#pdb.set_trace()
 
-X_train = train[:, :-2]
-y_train = train[:, -1]
+X_train = data[:train_N, 0:-1]
+y_train = data[:train_N, -1] * 100
+X_test  = data[train_N:, 0:-1]
+y_test  = data[train_N:, -1] * 100
 
 weights = np.zeros(dim)
 gradient = np.zeros(dim)
@@ -19,18 +23,21 @@ loss = 0
 
 start = time.time()
 
+print("all zeros MAE: %.4f" % (np.sum(np.abs(y_train)) / train_N))
+
 for t in range(numEpochs):
-  gradient = -np.sum(X_train, axis=0)
+  gradient = np.sum(np.sign(np.matmul(X_train, weights.T) - y_train)[:, np.newaxis] * X_train)
   # gradient calc goes here (770 x 1)
   
   weights = weights - learning_rate * gradient
   
-  if (t % 1 == 0):
+  if (t % 10 == 0):
     prediction = np.matmul(X_train, weights.T)
-    MAE = np.sum(y_train - prediction) / N # this is loss
+    train_MAE = np.sum(np.abs(y_train - prediction)) / train_N # this is loss
+    test_MAE = np.sum(np.abs(y_test - np.matmul(X_test, weights.T))) / test_N
     # loss calc goes here
     
-    print("MAE at epoch %d = %.3f" % (t, MAE))
+    print("Epoch: %d, train MAE: %.4f, test MAE: %.4f" % (t, train_MAE, test_MAE))
   #import pdb; pdb.set_trace()
 
 

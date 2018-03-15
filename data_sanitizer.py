@@ -38,8 +38,22 @@ for j in range(num_cols-1): # the last column is the loss
 # changing everything to floats
 print("changing the 2D list elements to floats")
 train_floats = np.array(train_list).astype(float)
-train_export = train_floats
 
+
+# removing low variance features
+print("removing low variance features")
+var = np.var(train_floats, axis=0)
+idxs = np.tile(np.array(var > .000001, dtype=bool), (num_rows-1, 1))
+train_floats = np.reshape(train_floats[idxs], (num_rows-1, -1))
+pdb.set_trace()
+
+
+# normalize data to between 0 and 1
+print("standardizing data")
+min = np.amin(train_floats, axis=0)
+max = np.amax(train_floats, axis=0)
+train_normalized = (train_floats - min) / (max - min)
+train_export = train_normalized
 
 # exporting the data
 print("exporting the data")
