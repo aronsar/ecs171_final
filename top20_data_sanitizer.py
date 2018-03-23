@@ -1,8 +1,10 @@
 import numpy as np
 import pdb
+import sys
 
 print("Importing data")
-train_import = np.load('ecs171train.npy')
+#train_import = np.load('ecs171train.npy')
+train_import = np.load(sys.argv[1])
 
 num_rows = train_import.shape[0] # 50001
 num_cols = len(str(train_import[0]).split(",")) # 771
@@ -52,7 +54,7 @@ for k in range(num_rows-1):
   
   
 # try to pick out the best features by hand
-train_best_features = train_floats[:,[665,666,667,756,758,767,550,530,467,403,398,320,321,312,313,288,280,279,249,num_cols-1]]
+train_best_features = train_floats[:,[0,665,666,667,756,758,767,550,530,467,403,398,320,321,312,313,288,280,279,249,num_cols-1]]
 
 
 # normalize data to between 0 and 1
@@ -61,6 +63,9 @@ min = np.amin(train_best_features, axis=0)
 max = np.amax(train_best_features, axis=0)
 train_normalized = (train_best_features - min) / (max - min)
 train_export = train_normalized
+
+# add back in the ID's
+#train_export = np.concatenate((np.expand_dims(train_floats[1:,0], 1), train_normalized), axis=1)
 
 # exporting the data
 print("exporting the data")
