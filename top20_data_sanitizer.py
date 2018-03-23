@@ -39,16 +39,28 @@ for j in range(num_cols-1): # the last column is the loss
 print("changing the 2D list elements to floats")
 train_floats = np.array(train_list).astype(float)
 
+# assign new labels 0=0,1=1,2=2,3=3,4-5=5,6-8=7,9+ = 11
+print("relabeling")
+for k in range(num_rows-1):
+  if abs(train_floats[k][num_cols-1] - 4) <= 0.1:
+    train_floats[k][num_cols-1] = 5
+  elif abs(train_floats[k][num_cols-1] - 6) <= 0.1 or abs(train_floats[k][num_cols-1] - 6) <= 0.1:
+    train_floats[k][num_cols-1] = 7
+  elif abs(train_floats[k][num_cols-1] - 9) <= 0.1 or train_floats[k][num_cols-1] - 9 >= 0.9:
+    train_floats[k][num_cols-1] = 11
+  # print(train_floats[k][num_cols-1])
+  
+  
+# try to pick out the best features by hand
+train_best_features = train_floats[:,[665,666,667,756,758,767,550,530,467,403,398,320,321,312,313,288,280,279,249,num_cols-1]]
+
+
 # normalize data to between 0 and 1
 print("standardizing data")
-min = np.amin(train_floats, axis=0)
-max = np.amax(train_floats, axis=0)
-train_normalized = (train_floats - min) / (max - min)
-
-train_export = train_normalized[:,[665,666,667,756,758,767,550,530,467,403,398,320,321,312,313,288,280,279,249,num_cols-1]]
-print(train_export[0][0])
-print(train_export[0][1])
-
+min = np.amin(train_best_features, axis=0)
+max = np.amax(train_best_features, axis=0)
+train_normalized = (train_best_features - min) / (max - min)
+train_export = train_normalized
 
 # exporting the data
 print("exporting the data")

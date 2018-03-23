@@ -50,7 +50,7 @@ for k in range(num_rows-1):
     train_floats[k][num_cols-1] = 7
   elif abs(train_floats[k][num_cols-1] - 9) <= 0.1 or train_floats[k][num_cols-1] - 9 >= 0.9:
     train_floats[k][num_cols-1] = 11
-  print(train_floats[k][num_cols-1])
+  # print(train_floats[k][num_cols-1])
 
 # removing low variance features
 print("removing low variance features")
